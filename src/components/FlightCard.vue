@@ -23,6 +23,7 @@
               :origin="origin.origin_code"
               :destination="dest.dest_code"
               :time="secsToHours(mainInfo.traveltime)"
+              :transfer="transfer"
             />
             <div class="dest-time">
               <span class="day">{{ destTime.day }}</span>
@@ -34,6 +35,7 @@
             :origin="origin.origin_code"
             :destination="dest.dest_code"
             :time="secsToHours(mainInfo.traveltime)"
+            :transfer="transfer"
           />
         </div>
         <div class="details">
@@ -64,7 +66,7 @@ import Pathway from './common/Pathway.vue'
 import Button from './common/Button.vue'
 import NonReturnableIcon from './icons/NonReturnableIcon.vue'
 import { BASE_URL, CURRENCIES } from '../constants';
-import { formatDate, secsToHours } from '../helpers';
+import { convertDateWithFormat, secsToHours } from '../helpers';
 
 const props = defineProps({
   item: {
@@ -79,13 +81,24 @@ const dest = computed(() =>
   mainInfo.value.segments[mainInfo.value.segments.length - 1]
 )
 const originTime = computed(() => ({
-  day: formatDate(mainInfo.dep_date, 'DD MMM, dd'),
-  time: formatDate(mainInfo.dep_date, 'HH:mm')
+  day: convertDateWithFormat(mainInfo.dep_date, 'DD MMM, dd'),
+  time: convertDateWithFormat(mainInfo.dep_date, 'HH:mm')
 }))
 const destTime = computed(() => ({
-  day: formatDate(mainInfo.arr_date, 'DD MMM, dd'),
-  time: formatDate(mainInfo.arr_date, 'HH:mm')
+  day: convertDateWithFormat(mainInfo.arr_date, 'DD MMM, dd'),
+  time: convertDateWithFormat(mainInfo.arr_date, 'HH:mm')
 }))
+const transfer = computed(() => {
+  if (mainInfo.value.segments.length <= 1) {
+    return null
+  }
+
+  return {
+    depTime: origin.value.dep_time_iso,
+    transferTime: mainInfo.value.segments[1].dep_time_iso,
+    location: dest.value.origin
+  }
+})
 const baggage = computed(() => {
   if (props.item.services['0PC']) {
     return 'Нет багажа'
@@ -252,7 +265,7 @@ const baggage = computed(() => {
     }
 
     .flight-pathway {
-      width: 130px;
+      width: 140px;
     }
 
     .card-footer {

@@ -8,11 +8,17 @@
     <div class="line">
       <div class="center" />
     </div>
+    <p v-if="transfer" class="transfer">
+      через {{ transfer.location }}, {{ time }}
+    </p>
   </div>
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue';
+import { secsToHours, toTimestamp } from '../../helpers';
+
+const props = defineProps({
   origin: {
     type: String,
     default: ''
@@ -24,7 +30,22 @@ defineProps({
   time: {
     type: String,
     default: ''
+  },
+  transfer: {
+    type: Object,
+    default: null,
+  },
+})
+
+const time = computed(() => {
+  if (!props.transfer) {
+    return 0
   }
+
+  const { transfer } = props
+  const diff = toTimestamp(transfer.transferTime) - toTimestamp(transfer.depTime)
+
+  return secsToHours(diff)
 })
 </script>
 
@@ -79,6 +100,15 @@ defineProps({
       left: 50%;
       transform: translate(-50%, -45%);
     }
+  }
+
+  .transfer {
+    margin-top: 5px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+    color: #FF9900;
   }
 }
 </style>

@@ -7,18 +7,20 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 import FilterBlock from './FilterBlock.vue'
 import Button from './common/Button.vue'
 import results from '../../results.json'
-import { OPTIONS } from '../constants';
+import { OPTIONS } from '../constants'
 
-const airlines = computed(() =>
-  Object.keys(results.airlines).map(item => ({
+const airlines = computed(() => {
+  const data = Object.keys(results.airlines).map(item => ({
     label: results.airlines[item],
     value: item
   }))
-)
+
+  return [{ label: 'Все', value: 'all' }, ...data]
+})
 </script>
 
 <style lang="scss" scoped>

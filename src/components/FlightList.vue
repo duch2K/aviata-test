@@ -3,6 +3,7 @@
     <FlightCard
       v-for="item in flights"
       class="item"
+      :key="item.id"
       :item="item"
     />
   </div>

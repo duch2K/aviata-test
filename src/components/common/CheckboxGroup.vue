@@ -1,6 +1,6 @@
 <template>
   <ul class="checkbox-group">
-    <li v-for="item in items">
+    <li v-for="item in items" :key="item.value">
       <Checkbox
         class="checkbox"
         :label="item.label"
