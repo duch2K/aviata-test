@@ -14,9 +14,9 @@
             <span class="head-baggage">{{ baggage }}</span>
           </div>
           <div class="flight">
-            <div class="origin-time">
-              <span class="day">{{ originTime.day }}</span>
-              <span class="time">{{ originTime.time }}</span>
+            <div class="dep-time">
+              <span class="day">{{ depTime.day }}</span>
+              <span class="time">{{ depTime.time }}</span>
             </div>
             <Pathway
               class="flight-pathway"
@@ -25,9 +25,12 @@
               :time="secsToHours(mainInfo.traveltime)"
               :transfer="transfer"
             />
-            <div class="dest-time">
-              <span class="day">{{ destTime.day }}</span>
-              <span class="time">{{ destTime.time }}</span>
+            <div class="arr-time">
+              <span class="day">
+                {{ arrTime.day }}
+                <span v-if="days > 0" class="plus">+{{ days }}</span>
+              </span>
+              <span class="time">{{ arrTime.time }}</span>
             </div>
           </div>
           <Pathway
@@ -66,7 +69,7 @@ import Pathway from './common/Pathway.vue'
 import Button from './common/Button.vue'
 import NonReturnableIcon from './icons/NonReturnableIcon.vue'
 import { BASE_URL, CURRENCIES } from '../constants';
-import { convertDateWithFormat, secsToHours } from '../helpers';
+import { convertDateWithFormat, dayDiff, secsToHours } from '../helpers';
 
 const props = defineProps({
   item: {
@@ -80,14 +83,17 @@ const origin = computed(() => mainInfo.value.segments[0])
 const dest = computed(() =>
   mainInfo.value.segments[mainInfo.value.segments.length - 1]
 )
-const originTime = computed(() => ({
-  day: convertDateWithFormat(mainInfo.dep_date, 'DD MMM, dd'),
-  time: convertDateWithFormat(mainInfo.dep_date, 'HH:mm')
+const depTime = computed(() => ({
+  day: convertDateWithFormat(origin.value.dep_time_iso, 'DD MMM, dd'),
+  time: convertDateWithFormat(origin.value.dep_time_iso, 'HH:mm')
 }))
-const destTime = computed(() => ({
-  day: convertDateWithFormat(mainInfo.arr_date, 'DD MMM, dd'),
-  time: convertDateWithFormat(mainInfo.arr_date, 'HH:mm')
+const arrTime = computed(() => ({
+  day: convertDateWithFormat(dest.value.arr_time_iso, 'DD MMM, dd'),
+  time: convertDateWithFormat(dest.value.arr_time_iso, 'HH:mm')
 }))
+const days = computed(() =>
+  dayDiff(origin.value.dep_time_iso, dest.value.arr_time_iso)
+)
 const transfer = computed(() => {
   if (mainInfo.value.segments.length <= 1) {
     return null
@@ -96,7 +102,7 @@ const transfer = computed(() => {
   return {
     depTime: origin.value.dep_time_iso,
     transferTime: mainInfo.value.segments[1].dep_time_iso,
-    location: dest.value.origin
+    location: mainInfo.value.segments[1].origin
   }
 })
 const baggage = computed(() => {
@@ -183,6 +189,13 @@ const baggage = computed(() => {
     &_mobile {
       display: none;
     }
+  }
+
+  .plus {
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 14px;
+    color: rgba(255, 55, 36, 0.8);
   }
 
   .details {

@@ -5,20 +5,21 @@
       type="checkbox"
       :id="id"
       :value="value"
-      v-model="checked"
+      :checked="checked"
+      @change="handleChange"
     >
     <span class="icon" :class="{ icon_checked: checked }">
-      <CheckIcon v-show="checked" color="#FFF" />
+      <CheckIcon v-if="checked" class="check" />
     </span>
     {{ label }}
   </label>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import CheckIcon from '../icons/CheckIcon.vue'
 
-defineProps({
+const props = defineProps({
   value: {
     type: String,
     default: false
@@ -30,10 +31,29 @@ defineProps({
   id: {
     type: String,
     required: false
+  },
+  isChecked: {
+    type: Boolean,
+    default: false
   }
 })
 
-const checked = ref(false)
+const emit = defineEmits(['change'])
+
+const checked = ref(props.isChecked)
+
+watch(() => props.isChecked, (value) => {
+  checked.value = value
+})
+
+const handleChange = (e) => {
+  const value = e.target.checked
+  checked.value = value
+  emit('change', {
+    value: props.value,
+    isChecked: value
+  })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -65,6 +85,10 @@ const checked = ref(false)
       background: #55BB06;
       border: none;
     }
+  }
+
+  .check {
+    fill: #FFF;
   }
 }
 </style>

@@ -1,31 +1,23 @@
 <template>
-  <div class="flight-list">
+  <TransitionGroup class="flight-list" name="list" tag="div">
     <FlightCard
-      v-for="item in flights"
+      v-for="item in data"
       class="item"
       :key="item.id"
       :item="item"
     />
-  </div>
+  </TransitionGroup>
 </template>
 
 <script setup>
 import FlightCard from './FlightCard.vue'
-import { computed } from 'vue';
 
-const props = defineProps({
+defineProps({
   data: {
     type: Object,
     default: () => ({})
   }
 })
-
-const flights = computed(() =>
-  props.data.flights.map(item => ({
-    ...item,
-    airline: props.data.airlines[item.validating_carrier]
-  }))
-)
 </script>
 
 <style lang="scss" scoped>
@@ -37,5 +29,15 @@ const flights = computed(() =>
       margin-bottom: 0;
     }
   }
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>

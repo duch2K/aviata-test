@@ -12,6 +12,10 @@ export const secsToHours = (seconds) => {
   return `${hoursStr} ${remainMinsStr}`.trim()
 }
 
-export const convertDateWithFormat = (dateStr, format) => dayjs(dateStr, 'YYYY/MM/DD HH:mm').format(format)
+export const convertDateWithFormat = (dateStr, format) => dayjs(dateStr).format(format)
 
-export const toTimestamp = (dateStr) => dayjs(dateStr).unix()
+export const toTimestamp = (date) => dayjs(date).unix()
+
+export const dayDiff = (dateFrom, dateTo) => {
+  return Math.floor((dayjs(dateTo).unix() - dayjs(dateFrom).unix()) / (3600 * 24))
+}

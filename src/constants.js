@@ -11,7 +11,7 @@ export const OPTIONS = [
   },
   {
     label: 'Только возвратные',
-    value: 'return'
+    value: 'refundable'
   }
 ]
 

@@ -9,7 +9,7 @@
       <div class="center" />
     </div>
     <p v-if="transfer" class="transfer">
-      через {{ transfer.location }}, {{ time }}
+      через {{ transfer.location }}, {{ transferAfter }}
     </p>
   </div>
 </template>
@@ -37,7 +37,7 @@ const props = defineProps({
   },
 })
 
-const time = computed(() => {
+const transferAfter = computed(() => {
   if (!props.transfer) {
     return 0
   }
@@ -51,6 +51,10 @@ const time = computed(() => {
 
 <style lang="scss" scoped>
 .pathway {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
   .top {
     margin-bottom: 3.5px;
     display: flex;

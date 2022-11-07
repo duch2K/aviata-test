@@ -1,26 +1,40 @@
 <template>
   <aside class="sidebar">
-    <FilterBlock class="filter" :items="OPTIONS" />
-    <FilterBlock class="filter" :items="airlines" />
-    <Button type="clear">Сбросить все фильтры</Button>
+    <FilterBlock
+      class="filter"
+      label="options"
+      :items="OPTIONS"
+    />
+    <FilterBlock
+      class="filter"
+      label="airlines"
+      :items="airlines"
+      has-all
+    />
+    <Button type="clear" @click="reset">Сбросить все фильтры</Button>
   </aside>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import FilterBlock from './FilterBlock.vue'
 import Button from './common/Button.vue'
 import results from '../../results.json'
 import { OPTIONS } from '../constants'
 
-const airlines = computed(() => {
-  const data = Object.keys(results.airlines).map(item => ({
+const { setFilter } = inject('filters')
+
+const airlines = computed(() =>
+  Object.keys(results.airlines).map(item => ({
     label: results.airlines[item],
     value: item
   }))
+)
 
-  return [{ label: 'Все', value: 'all' }, ...data]
-})
+const reset = () => {
+  setFilter('options', [])
+  setFilter('airlines', [])
+}
 </script>
 
 <style lang="scss" scoped>

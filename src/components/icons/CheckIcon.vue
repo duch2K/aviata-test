@@ -4,11 +4,3 @@
   </svg>
 </template>
 
-<script setup>
-defineProps({
-  color: {
-    type: String,
-    default: '#B9B9B9'
-  }
-})
-</script>
