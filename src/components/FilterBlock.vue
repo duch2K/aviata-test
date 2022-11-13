@@ -7,6 +7,7 @@
         @click="setFilter(label, [])"
         @mouseover="isHover = true"
         @mouseleave="isHover = false"
+        :data-test="`reset-${label}`"
       >
         <CloseFilterIcon
           class="reset-icon"
@@ -36,6 +37,7 @@
           :id="item.value"
           :is-checked="filters[label].includes(item.value)"
           @change="handleChange"
+          :data-test="`filter-${item.value}`"
         />
       </li>
     </ul>

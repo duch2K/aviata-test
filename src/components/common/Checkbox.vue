@@ -7,6 +7,7 @@
       :value="value"
       :checked="checked"
       @change="handleChange"
+      v-bind=$attrs
     >
     <span class="icon" :class="{ icon_checked: checked }">
       <CheckIcon v-if="checked" class="check" />
@@ -14,6 +15,12 @@
     {{ label }}
   </label>
 </template>
+
+<script>
+export default {
+  inheritAttrs: false
+}
+</script>
 
 <script setup>
 import { ref, watch } from 'vue';

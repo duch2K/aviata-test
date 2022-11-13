@@ -30,7 +30,6 @@ provide('filters', {
 
 watch(filters, (value) => {
   let result = [...data.flights]
-  console.log('yo', result)
 
   if (value.options.includes('refundable')) {
     result = result.filter(item => item.refundable)
@@ -41,7 +40,6 @@ watch(filters, (value) => {
   if (value.options.includes('baggage')) {
     result = result.filter(item => !item.services['0PC'])
   }
-  console.log('yo', result)
 
   result = result.filter(item =>
     value.airlines.includes(item.itineraries[0][0].carrier)

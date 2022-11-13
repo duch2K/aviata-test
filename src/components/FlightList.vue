@@ -5,6 +5,7 @@
       class="item"
       :key="item.id"
       :item="item"
+      data-test="flight-card"
     />
   </TransitionGroup>
 </template>
